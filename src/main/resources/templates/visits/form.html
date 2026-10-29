@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Visit form - MedTracker</title></head>
+<body>
+<main>
+    <h1 th:text="${title}">Visit</h1>
+
+    <form id="visit-form" class="card" th:action="${action}" th:object="${visit}" method="post">
+        <div class="field">
+            <label for="visitDate">Visit date</label>
+            <input type="date" id="visitDate" th:field="*{visitDate}">
+            <small class="error" th:if="${#fields.hasErrors('visitDate')}" th:errors="*{visitDate}"></small>
+        </div>
+
+        <div class="field">
+            <label for="doctorName">Doctor name</label>
+            <input type="text" id="doctorName" maxlength="150" th:field="*{doctorName}">
+            <small class="error" th:if="${#fields.hasErrors('doctorName')}" th:errors="*{doctorName}"></small>
+        </div>
+
+        <div class="field">
+            <label for="symptoms">Symptoms</label>
+            <textarea id="symptoms" rows="3" th:field="*{symptoms}"></textarea>
+            <small class="error" th:if="${#fields.hasErrors('symptoms')}" th:errors="*{symptoms}"></small>
+        </div>
+
+        <div class="field">
+            <label for="diagnosis">Diagnosis</label>
+            <textarea id="diagnosis" rows="2" th:field="*{diagnosis}"></textarea>
+            <small class="error" th:if="${#fields.hasErrors('diagnosis')}" th:errors="*{diagnosis}"></small>
+        </div>
+
+        <h2>Medicines</h2>
+        <small class="error" th:if="${#fields.hasErrors('medicines')}" th:errors="*{medicines}"></small>
+
+        <div id="rows">
+            <div class="med-row" th:each="m, i : *{medicines}">
+                <input type="text" placeholder="Name" maxlength="150" data-field="name"
+                       th:field="*{medicines[__${i.index}__].name}">
+                <input type="text" placeholder="Dose (e.g. 500 mg)" maxlength="100" data-field="dose"
+                       th:field="*{medicines[__${i.index}__].dose}">
+                <input type="text" placeholder="Frequency (e.g. 1+0+1)" maxlength="100" data-field="frequency"
+                       th:field="*{medicines[__${i.index}__].frequency}">
+                <input type="number" placeholder="Days" min="1" max="365" data-field="durationDays"
+                       th:field="*{medicines[__${i.index}__].durationDays}">
+                <button type="button" class="btn secondary" onclick="removeRow(this)">Remove</button>
+                <small class="error full" th:if="${#fields.hasErrors('medicines[__${i.index}__].*')}"
+                       th:errors="*{medicines[__${i.index}__].*}"></small>
+            </div>
+        </div>
+
+        <button type="button" class="btn secondary" onclick="addRow()">Add medicine</button>
+
+        <div class="actions end">
+            <a class="btn secondary" th:href="@{/}">Cancel</a>
+            <button type="submit" class="btn">Save</button>
+        </div>
+    </form>
+
+    <template id="row-template">
+        <div class="med-row">
+            <input type="text" placeholder="Name" maxlength="150" data-field="name">
+            <input type="text" placeholder="Dose (e.g. 500 mg)" maxlength="100" data-field="dose">
+            <input type="text" placeholder="Frequency (e.g. 1+0+1)" maxlength="100" data-field="frequency">
+            <input type="number" placeholder="Days" min="1" max="365" data-field="durationDays">
+            <button type="button" class="btn secondary" onclick="removeRow(this)">Remove</button>
+        </div>
+    </template>
+
+    <script>
+        function reindex() {
+            document.querySelectorAll('#rows .med-row').forEach(function (row, i) {
+                row.querySelectorAll('[data-field]').forEach(function (el) {
+                    el.name = 'medicines' + '[' + i + '].' + el.dataset.field;
+                });
+            });
+        }
+        function addRow() {
+            var t = document.getElementById('row-template');
+            document.getElementById('rows').appendChild(t.content.cloneNode(true));
+            reindex();
+        }
+        function removeRow(btn) {
+            btn.closest('.med-row').remove();
+            if (!document.querySelector('#rows .med-row')) addRow();
+            reindex();
+        }
+        document.getElementById('visit-form').addEventListener('submit', reindex);
+        reindex();
+    </script>
+</main>
+</body>
+</html>

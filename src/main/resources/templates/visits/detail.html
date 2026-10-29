@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Visit - MedTracker</title></head>
+<body>
+<main>
+    <div class="bar">
+        <h1>Visit on <span th:text="${visit.visitDate}">2026-01-01</span></h1>
+        <div class="actions">
+            <a class="btn secondary" th:href="@{/}">Back</a>
+            <a class="btn" th:href="@{/visits/{id}/edit(id=${visit.id})}">Edit</a>
+            <form th:action="@{/visits/{id}/delete(id=${visit.id})}" method="post"
+                  onsubmit="return confirm('Delete this visit?')">
+                <button type="submit" class="btn danger">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <dl>
+            <dt>Doctor</dt>
+            <dd th:text="${visit.doctorName}">Dr. Name</dd>
+            <dt>Symptoms</dt>
+            <dd class="pre" th:text="${visit.symptoms} ?: '-'">Symptoms</dd>
+            <dt>Diagnosis</dt>
+            <dd class="pre" th:text="${visit.diagnosis} ?: '-'">Diagnosis</dd>
+        </dl>
+    </div>
+
+    <h2>Medicines</h2>
+    <div class="card table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Dose</th>
+                <th>Frequency</th>
+                <th>Duration</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${visit.medicines}">
+                <td th:text="${m.name}">Name</td>
+                <td th:text="${m.dose} ?: '-'">Dose</td>
+                <td th:text="${m.frequency} ?: '-'">Frequency</td>
+                <td th:text="${m.durationDays != null} ? ${m.durationDays} + ' days' : '-'">5 days</td>
+                <td><span class="badge" th:if="${m.antibiotic}">Antibiotic</span></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

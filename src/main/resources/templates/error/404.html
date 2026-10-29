@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Not found - MedTracker</title></head>
+<body>
+<main>
+    <div class="card center">
+        <h1>404</h1>
+        <p>The page or visit you requested does not exist.</p>
+        <a class="btn" th:href="@{/}">Back to visits</a>
+    </div>
+</main>
+</body>
+</html>

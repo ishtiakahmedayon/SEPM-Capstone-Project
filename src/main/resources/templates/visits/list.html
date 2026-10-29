@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::title}, ~{::main})}">
+<head><title>Visits - MedTracker</title></head>
+<body>
+<main>
+    <div class="bar">
+        <h1>Visits</h1>
+        <a class="btn" th:href="@{/visits/new}">New visit</a>
+    </div>
+
+    <form method="get" th:action="@{/}" class="filter">
+        <label>
+            <input type="checkbox" name="antibiotics" value="true"
+                   th:checked="${antibiotics}" onchange="this.form.submit()">
+            Antibiotics only
+        </label>
+    </form>
+
+    <div class="card table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Doctor</th>
+                <th>Diagnosis</th>
+                <th>Medicines</th>
+                <th>Antibiotics</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="v : ${visits}">
+                <td th:text="${v.visitDate}">2026-01-01</td>
+                <td th:text="${v.doctorName}">Dr. Name</td>
+                <td th:text="${v.diagnosis} ?: '-'">Diagnosis</td>
+                <td th:text="${v.medicines.size()}">0</td>
+                <td>
+                    <span class="badge" th:if="${v.antibioticCount > 0}" th:text="${v.antibioticCount}">1</span>
+                    <span th:unless="${v.antibioticCount > 0}">0</span>
+                </td>
+                <td><a th:href="@{/visits/{id}(id=${v.id})}">View</a></td>
+            </tr>
+            <tr th:if="${visits.isEmpty()}">
+                <td colspan="6" class="muted">No visits found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

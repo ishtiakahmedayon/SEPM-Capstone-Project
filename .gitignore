@@ -1,0 +1,13 @@
+target/
+.idea/
+*.iml
+docs/*.aux
+docs/*.log
+docs/*.toc
+docs/*.lof
+docs/*.lot
+docs/*.out
+docs/*.fls
+docs/*.fdb_latexmk
+docs/build.log
+docs/img/
